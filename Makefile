@@ -28,20 +28,21 @@ restart: stop start ## Restart the Docker stack
 
 setup: start ## Setup the project (database, schema, fixtures)
 	@echo "Waiting for database to be ready..."
-	@sleep 5
-	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) bin/console doctrine:database:create --if-not-exists
-	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) bin/console doctrine:migrations:migrate --no-interaction
-	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) bin/console doctrine:fixtures:load --no-interaction
+	@powershell -NoProfile -Command "Start-Sleep -Seconds 5"
+	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) composer install --no-interaction --prefer-dist
+	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) php bin/console doctrine:database:create --if-not-exists
+	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) php bin/console doctrine:migrations:migrate --no-interaction
+	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) php bin/console doctrine:fixtures:load --no-interaction
 	@echo "${GREEN}Setup complete!${NC}"
 
 shell: ## Open a shell in the PHP container
 	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) bash
 
 db-create: ## Create the database
-	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) bin/console doctrine:database:create
+	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) php bin/console doctrine:database:create
 
 db-migrate: ## Run migrations (or schema update)
-	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) bin/console doctrine:schema:update --force
+	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) php bin/console doctrine:schema:update --force
 
 db-fixtures: ## Load fixtures
-	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) bin/console doctrine:fixtures:load --no-interaction
+	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) php bin/console doctrine:fixtures:load --no-interaction
