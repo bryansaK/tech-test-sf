@@ -7,7 +7,7 @@ PHP_CONTAINER = php
 GREEN = \033[0;32m
 NC = \033[0m # No Color
 
-.PHONY: help start stop restart setup shell db-create db-migrate db-fixtures
+.PHONY: help start stop restart setup shell db-create db-migrate db-fixtures test
 
 help: ## Show this help message
 	@echo "Usage: make [command]"
@@ -46,3 +46,6 @@ db-migrate: ## Run migrations (or schema update)
 
 db-fixtures: ## Load fixtures
 	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) php bin/console doctrine:fixtures:load --no-interaction
+
+test: ## Run PHPUnit tests
+	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) php bin/phpunit --testdox
