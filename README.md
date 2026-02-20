@@ -19,7 +19,7 @@ L'endpoint `/events` retourne actuellement une liste brute de tous les événeme
 
 | Endpoint | À faire |
 |------|--------|
-| **GET /events** | Ajouter de la pagination et du filtrage (par exemple par date à venir) |
+| **GET /events** | Ajouter de la pagination et du filtrage (par exemple par date à venir) | 
 | **GET /events/{id}** | Créer la route détail qui retourne un événement unique par son UUID |
 | **Sérialisation** | Utiliser le Serializer Symfony au lieu des tableaux manuels |
 
