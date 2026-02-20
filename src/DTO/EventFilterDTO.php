@@ -10,6 +10,7 @@ final class EventFilterDTO
 {
     public function __construct(
         public readonly ?string $from = null,
+        public readonly ?string $to = null,
         public readonly ?string $location = null,
     ) {}
 
@@ -17,6 +18,7 @@ final class EventFilterDTO
     {
         return new self(
             from: $request->query->get('from'),
+            to: $request->query->get('to'),
             location: $request->query->get('location'),
         );
     }

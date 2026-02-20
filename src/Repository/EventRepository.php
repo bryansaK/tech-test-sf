@@ -31,12 +31,14 @@ class EventRepository extends ServiceEntityRepository
             $qb->andWhere('e.location LIKE :location')
                ->setParameter('location', '%' . $filters->location . '%');
         }
-
         if ($filters->from !== null) {
             $qb->andWhere('e.date >= :dateFrom')
                ->setParameter('dateFrom', new \DateTime($filters->from));
         }
-
+        if ($filters->to !== null) {
+            $qb->andWhere('e.date <= :dateTo')
+               ->setParameter('dateTo', new \DateTime($filters->to));
+        }
         $qb->setFirstResult($offset)
            ->setMaxResults($limit);
 

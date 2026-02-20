@@ -30,19 +30,19 @@ final class EventService
         return $result;
     }
 
-    /**
-     * @return EventDTO[]
-     */
-    public function getEventsByUUID(string $uuid): array
+    public function getEventsByUUID(string $id): ?EventDTO
     {
-        $event = $this->eventRepository->findBy(['uuid' => $uuid]);
-        $result[] = EventDTO::fromEntity($event[0] ?? null);
+        try {
+            $event = $this->eventRepository->find($id);
+        } catch (\Exception) {
+            return null;
+        }
 
-        return $result;
+        if (!$event) {
+            return null;
+        }
+
+        return EventDTO::fromEntity($event);
     }
 
-    public function countEvents(): int
-    {
-        return $this->eventRepository->count([]);
-    }
 }

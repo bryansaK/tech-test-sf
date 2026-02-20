@@ -18,6 +18,7 @@ class EventController extends AbstractController
     #[Route('/events', name: 'app_event_list', methods: ['GET'])]
     #[OA\Parameter(name: 'page', in: 'query', required: false, schema: new OA\Schema(type: 'integer', default: 1))]
     #[OA\Parameter(name: 'limit', in: 'query', required: false, schema: new OA\Schema(type: 'integer', default: 20))]
+    #[OA\Parameter(name: 'from', in: 'query', required: false, description: 'Filter events from this date (Y-m-d)', schema: new OA\Schema(type: 'string', format: 'date'))]
     #[OA\Parameter(name: 'to', in: 'query', required: false, description: 'Filter events until this date (Y-m-d)', schema: new OA\Schema(type: 'string', format: 'date'))]
     #[OA\Parameter(name: 'location', in: 'query', required: false, description: 'Filter by location (partial match)', schema: new OA\Schema(type: 'string'))]
     public function list(Request $request, EventService $eventService, PaginationService $paginationService): Response
@@ -25,16 +26,15 @@ class EventController extends AbstractController
         $pagination = $paginationService->paginate($request);
         $filter = EventFilterDTO::fromRequest($request);
         $events = $eventService->getPaginatedEvents($pagination['limit'], $pagination['offset'], $filter);
-        $total = $eventService->countEvents($filter);
 
         return $this->json([
             'data' => $events,
             'pagination' => [
                 'page' => $pagination['page'],
                 'limit' => $pagination['limit'],
-                'total' => $total,
+                'total' => count($events),
             ],
-        ], 200, [], ['groups' => ['public']]);
+        ], Response::HTTP_OK, [], ['groups' => ['public']]);
     }
 
     #[Route('/events/{id}', name: 'app_event_detail', methods: ['GET'])]
@@ -46,6 +46,6 @@ class EventController extends AbstractController
             return $this->json(['error' => 'Event not found'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json(['data' => $event], 200, [], ['groups' => ['public']]);
+        return $this->json(['data' => $event], Response::HTTP_OK, [], ['groups' => ['public']]);
     }
 }
