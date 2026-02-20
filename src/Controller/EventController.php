@@ -28,7 +28,7 @@ class EventController extends AbstractController
         $events = $eventService->getPaginatedEvents($pagination['limit'], $pagination['offset'], $filter);
 
         return $this->json([
-            'data' => $events,
+            $events,
             'pagination' => [
                 'page' => $pagination['page'],
                 'limit' => $pagination['limit'],
@@ -46,6 +46,6 @@ class EventController extends AbstractController
             return $this->json(['error' => 'Event not found'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json(['data' => $event], Response::HTTP_OK, [], ['groups' => ['public']]);
+        return $this->json([$event], Response::HTTP_OK, [], ['groups' => ['public']]);
     }
 }
