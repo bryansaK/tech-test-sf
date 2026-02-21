@@ -1,7 +1,6 @@
 nelmio_cors:
     defaults:
         origin_regex: false
-        # Autorise explicitement ton front en dev
         allow_origin: ['http://localhost:8081']
         allow_credentials: true
         allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
