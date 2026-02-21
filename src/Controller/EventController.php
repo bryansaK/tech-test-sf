@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\DTO\EventFilterDTO;
+use App\DTO\EventCreateDTO;
 use App\Service\EventService;
 use App\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,6 +38,19 @@ class EventController extends AbstractController
         ], Response::HTTP_OK, [], ['groups' => ['public']]);
     }
 
+    #[Route('/events', name: 'app_event_create', methods: ['POST'])]
+    public function create(Request $request, EventService $eventService): Response
+    {
+        try {
+            $dto = EventCreateDTO::fromRequest($request);
+            $event = $eventService->createEvent($dto);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json(['event' => $event], Response::HTTP_CREATED, [], ['groups' => ['public']]);
+    }
+
     #[Route('/events/{id}', name: 'app_event_detail', methods: ['GET'])]
     public function detail(string $id, EventService $eventService): Response
     {
@@ -47,5 +61,17 @@ class EventController extends AbstractController
         }
 
         return $this->json(['events' => $event], Response::HTTP_OK, [], ['groups' => ['public']]);
+    }
+
+    #[Route('/events/{id}', name: 'app_event_delete', methods: ['DELETE'])]
+    public function delete(string $id, EventService $eventService): Response
+    {
+        $deleted = $eventService->deleteEvent($id);
+
+        if (!$deleted) {
+            return $this->json(['error' => 'Event not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        return new Response(null, Response::HTTP_NO_CONTENT);
     }
 }

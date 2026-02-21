@@ -30,6 +30,9 @@ class Event
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imageUrl = null;
 
+    #[ORM\Column(length: 255, options: ['default' => 'culture'])]
+    private ?string $category = 'culture';
+
     public function getId(): ?string
     {
         return $this->id;
@@ -91,6 +94,18 @@ class Event
     public function setImageUrl(?string $imageUrl): static
     {
         $this->imageUrl = $imageUrl;
+
+        return $this;
+    }
+
+    public function getCategory(): ?string
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?string $category): static
+    {
+        $this->category = $category ?? 'culture';
 
         return $this;
     }
