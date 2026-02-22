@@ -22,6 +22,8 @@ final class EventDTO
         public readonly ?string $location,
         #[Groups(['public'])]
         public readonly ?string $imageUrl,
+        #[Groups(['public'])]
+        public readonly ?string $category,
     ) {}
 
     public static function fromEntity(Event $event): self
@@ -33,6 +35,7 @@ final class EventDTO
             date: $event->getDate()->format('Y-m-d\TH:i:s.v\Z'),
             location: $event->getLocation(),
             imageUrl: $event->getImageUrl(),
+            category: $event->getCategory(),
         );
     }
 }
