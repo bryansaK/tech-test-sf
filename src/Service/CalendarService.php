@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\DTO\EventDTO;
 use App\Entity\Calendar;
 use App\Repository\CalendarRepository;
 use App\Repository\EventRepository;
@@ -64,5 +65,28 @@ final class CalendarService
         $this->entityManager->flush();
 
         return true;
+    }
+
+    /**
+     * @return EventDTO[]
+     */
+    public function getUserCalendarEvents(string $userId, int $limit, int $offset): array
+    {
+        $user = $this->userRepository->find($userId);
+        if (!$user) {
+            return [];
+        }
+
+        $calendars = $this->calendarRepository->findUserEvents($user, $limit, $offset);
+
+        $result = [];
+        foreach ($calendars as $calendar) {
+            $event = $calendar->getEvent();
+            if ($event !== null) {
+                $result[] = EventDTO::fromEntity($event);
+            }
+        }
+
+        return $result;
     }
 }
